@@ -84,7 +84,7 @@ library(lubridate)
 
 
 ```{r echo=FALSE}
-setwd("C:\\Users\\Aysha\\Downloads\\divvy_tripdata_CSV")
+setwd("C:\\Users\\Raif\\Downloads\\divvy_tripdata_CSV")
 
 data_01<-read.csv("202109-divvy-tripdata.csv")
 data_02<-read.csv("202110-divvy-tripdata.csv")
@@ -101,22 +101,8 @@ data_12<-read.csv("202208-divvy-tripdata.csv")
 ```
 **To change working directory and Import raw data .csv files**
 
-setwd("C:\\Users\\Raif\\Downloads\\divvy_tripdata_CSV")
 
-Imported data:
 
-data_01<-read.csv("202109-divvy-tripdata.csv")<br>
-data_02<-read.csv("202110-divvy-tripdata.csv")<br>
-data_03<-read.csv("202111-divvy-tripdata.csv")<br>
-data_04<-read.csv("202112-divvy-tripdata.csv")<br>
-data_05<-read.csv("202201-divvy-tripdata.csv")<br>
-data_06<-read.csv("202202-divvy-tripdata.csv")<br>
-data_07<-read.csv("202203-divvy-tripdata.csv")<br>
-data_08<-read.csv("202204-divvy-tripdata.csv")<br>
-data_09<-read.csv("202205-divvy-tripdata.csv")<br>
-data_10<-read.csv("202206-divvy-tripdata.csv")<br>
-data_11<-read.csv("202207-divvy-tripdata.csv")<br>
-data_12<-read.csv("202208-divvy-tripdata.csv")<br>
 
 <br>
 
