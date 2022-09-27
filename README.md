@@ -1,15 +1,6 @@
 # cyclistic-case-study
 
----
-title: "Cyclistic - Case study"
-author: "Mohammed Raif"
-date: "2022-09-26"
-output: "html_document"
-subtitle: "*Google-data-analytics-capstone-project*"
----
-<br>
-
-#### **Introduction**
+### **Introduction**
 
 As a part of Google's Data Analytics certification course by Coursera, I have chosen the Cyclistic dataset for my capstone project. For this case study, and to answer all key business questions asked in this project, I will follow the six steps of Google data analysis process which are below:
 
@@ -20,11 +11,11 @@ As a part of Google's Data Analytics certification course by Coursera, I have ch
 * Share
 * Act
 
-##### **The Scenario**
+### **The Scenario**
 
 As a junior data analyst working in the marketing analyst team at Cyclistic, a bike-share company in Chicago, my task is to understand how casual riders and annual members use Cyclistic bikes differently. From these insights, my team will design a new marketing strategy to convert casual riders into annual members.
 
-##### **Characters and Teams**
+### **Characters and Teams**
 
 * Cyclistic: A bike-share program that features more than 5,800 bicycles and 600 docking stations. Cyclistic sets itself apart by also offering reclining bikes, hand tricycles, and cargo bikes, making bike-share more inclusive to people with disabilities and riders who can’t use a standard two-wheeled bike. The majority of riders opt for traditional bikes; about 8% of riders use the assistive options. Cyclistic users are more likely to ride for leisure, but about 30% use them to commute to work each day.
 
@@ -33,10 +24,9 @@ As a junior data analyst working in the marketing analyst team at Cyclistic, a b
 * Cyclistic marketing analytics team: A team of data analysts who are responsible for collecting, analyzing, and reporting data that helps guide Cyclistic marketing strategy. 
 
 * Cyclistic executive team: The notoriously detail-oriented executive team will decide whether to approve the recommended marketing program.
-
 <br>
 
-##### The **Ask** Phase
+### The **Ask** Phase
 
 Business Task: To come up with a marketing strategy and campaigns to convert casual riders to annual members, as annual members are more profitable to the company.
 
@@ -44,10 +34,9 @@ Key stakeholders:
 
 * Lily Moreno: The director of marketing and my manager.
 * Cyclistic executive team: The team which will decide whether to approve the recommended marketing program which will be presented by our marketing team.
-
 <br>
 
-##### The **Prepare** Phase
+### The **Prepare** Phase
 
 The main data set has been downloaded and stored in .csv files.
 
@@ -60,32 +49,31 @@ The main data set has been downloaded and stored in .csv files.
 * Data is collected and provided by Motivate International Inc.- Primary source
 
 * The data has full credibility because it's reliable, original, comprehensive, current and cited(ROCCC).
-
 <br>
 
-##### The **Process** Phase
+### The **Process** Phase
 
-##### *Tools used*
+#### *Tools used*
 
 * Spreadsheet - All 12 data sets needed inspection to check if all of the data is accurate and reliable.
 
 * R - For data cleaning and manipulation,to analyze the data and for data visualization.
 
-##### *Setting up the environment*
+#### *Setting up the environment*
 
-Loading necessary packages:
-
-
+Load necessary packages:
 ```{r}
 library(tidyverse)
 library(ggplot2)
 library(lubridate)
 ```
-
+Change working directory
 
 ```{r echo=FALSE}
 setwd("C:\\Users\\Raif\\Downloads\\divvy_tripdata_CSV")
-
+```
+Import raw data as .csv files.
+```{r}
 data_01<-read.csv("202109-divvy-tripdata.csv")
 data_02<-read.csv("202110-divvy-tripdata.csv")
 data_03<-read.csv("202111-divvy-tripdata.csv")
@@ -99,14 +87,8 @@ data_10<-read.csv("202206-divvy-tripdata.csv")
 data_11<-read.csv("202207-divvy-tripdata.csv")
 data_12<-read.csv("202208-divvy-tripdata.csv")
 ```
-**To change working directory and Import raw data .csv files**
 
-
-
-
-<br>
-
-##### *Data Wrangling and Manipulation*
+#### *Data Wrangling and Manipulation*
 
 Binding individual monthly data frames into one big data frame
 
@@ -114,17 +96,16 @@ Binding individual monthly data frames into one big data frame
 all_data <- rbind(data_01,data_02,data_03,data_04,data_05,data_06,
                   data_07,data_08,data_09,data_10,data_11,data_12)
 ```
-<br>
+
 Inspecting all_data table by using, str,head,glimpse,colnames,summary etc
 ```{r}
 str(all_data) 
 head(all_data)
 glimpse(all_data)
 ```
-<br>
+
 Rename column names for better understanding
 ```{r}
-
 all_data <- rename(all_data,
                    user_id=ride_id,
                    bike_type=rideable_type,
@@ -134,20 +115,20 @@ all_data <- rename(all_data,
                    end_station=end_station_name,
                    membership_type=member_casual)
 ```
-<br>
+
 Verify and delete unnecessary columns
 ```{r}
 colnames(all_data)
 all_data<- all_data %>%
   select(-c(start_station_id,end_station_id:end_lng))
 ```
-<br>
+
 Delete all blanks and NA cells
 ```{r}
 all_data[all_data==""]<- NA
 clean_data <- na.omit(all_data) 
 ```
-<br>
+
 Add new columns required for the analysis
 ```{r}
 clean_data$start_date <- as.Date(clean_data$start_time)
@@ -156,19 +137,19 @@ clean_data$start_day <- format(as.Date(clean_data$start_date),"%d")
 clean_data$start_year <- format(as.Date(clean_data$start_date),"%Y")
 clean_data$day_of_week <- format(as.Date(clean_data$start_date),"%A")
 ```
-<br>
+
 Change data type to numeric for start year and start day
 ```{r}
 clean_data$start_day <- as.numeric(as.character(clean_data$start_day))
 clean_data$start_year <- as.numeric(as.character(clean_data$start_year))
 ```
-<br>
+
 Reorder columns for better data frame format
 ```{r}
 clean_data_v2 <- clean_data[, c(1, 2, 7, 3, 4, 5, 6, 8, 9, 10, 11, 12)]
 
 ```
-<br>
+
 Additional column required - length of the ride named as *ride_time* in numeric format
 ```{r}
 clean_data_v2$ride_time <- difftime(clean_data_v2$end_time,clean_data_v2$start_time)
@@ -176,18 +157,17 @@ clean_data_v2$ride_time <- difftime(clean_data_v2$end_time,clean_data_v2$start_t
 clean_data_v2$ride_time <- as.numeric(as.character(clean_data_v2$ride_time))
 
 ```
-<br>
+
 Check and delete if there are any negative values in *ride_time* 
 ```{r}
 clean_data_v2 <- arrange(clean_data_v2,ride_time)
 clean_data_v2[clean_data_v2 < 0] <- NA  #convert negative values to NA
 cleaned_data <- na.omit(clean_data_v2) #deleting NA values
 ```
-<br>
 
-##### The **Analyze** Phase
+### The **Analyze** Phase
 
-##### *Descriptive analysis on ride_time*
+#### *Descriptive analysis on ride_time*
 
 ```{r}
 mean(cleaned_data$ride_time) #straight average
@@ -195,13 +175,13 @@ median(cleaned_data$ride_time)
 max(cleaned_data$ride_time) #longest ride
 min(cleaned_data$ride_time) #shortest ride
 ```
-<br>
+
 All above analysis can be done in one line using summary()
 ```{r}
 summary(cleaned_data$ride_time)
 ```
+
 *The Average length of the ride is 1080 secs.*
-<br>
 
 Compare members and casual users
 ```{r}
@@ -211,9 +191,9 @@ aggregate(cleaned_data$ride_time ~ cleaned_data$membership_type, FUN = max)
 aggregate(cleaned_data$ride_time ~ cleaned_data$membership_type, FUN = min)
 ```
 *The Average length of the ride for*
-casual     -        1547.3404
-member     -        752.7599
-<br>
+Casual     -        1547.3404
+Member     -        752.7599
+
 
 Rearrange weekdays and months as per order to do weekly analysis
 ```{r}
@@ -223,7 +203,6 @@ cleaned_data$day_of_week <- ordered(cleaned_data$day_of_week, levels
 cleaned_data$start_month <- ordered(cleaned_data$start_month, levels 
 = c("January", "February", "March", "April", "May", "June", "July","August","September","October" , "November","December"))
 ```
-<br>
 
 Average ride time by each day and month for members vs casual users
 ```{r}
@@ -234,14 +213,16 @@ aggregate(cleaned_data$ride_time ~ cleaned_data$membership_type +
 ```
 *For both as per day and month analysis the average length of the length is much higher for casual riders than members. It is shown in below chart as well.*
 
-<br>
+
 *Weekly analysis*
 ```{r}
 #checking ride_time on weekday basis
 cleaned_data %>% 
   group_by(day_of_week) %>% 
   summarise(number_of_rides = n())
+```
 
+```{r}
 #Plot-1 Average_duration for every day of the week for members and casual riders. 
 cleaned_data%>% 
   group_by(membership_type, day_of_week) %>% 
@@ -250,7 +231,11 @@ cleaned_data%>%
   ggplot(aes(x = day_of_week, y = average_duration, fill=membership_type))+
   labs(title = "Average duration vs day in a week", subtitle = "Ride time", caption = "Data collected from Divvy")+ 
   geom_col(position = "dodge")
+```
+**Plot-01** ![chart_01](https://user-images.githubusercontent.com/108362353/192490557-f32c653b-e7e3-4337-9611-395f560b2989.png)
 
+
+```{r}
 #Plot-2 Number of riders each day of the week for members and casual riders. 
 cleaned_data%>% 
   group_by(membership_type, day_of_week) %>% 
@@ -261,14 +246,19 @@ cleaned_data%>%
   geom_col(position = "dodge")
 
 ```
-<br>
+**Plot-02** ![chart_02](https://user-images.githubusercontent.com/108362353/192491190-d796428a-c2cf-4fe0-a136-7a7f14ce28dc.png)
+
+
 *Monthly analysis*
+
 ```{r}
 #checking ride_time on monthly basis
 cleaned_data %>% 
   group_by(start_month) %>%  
   summarise(number_of_rides = n())
+```
 
+```{r}
 #Plot-3 Number of riders per month for members and casual riders. 
 cleaned_data %>% 
   group_by(membership_type, start_month) %>%  
@@ -278,7 +268,11 @@ cleaned_data %>%
   labs(title = "Number of Rides vs Months", subtitle = "Ride time",caption =  
          "Data collected from Divvy")+
   geom_col(position = "dodge")
-           
+```
+**Plot-03** ![chart_03](https://user-images.githubusercontent.com/108362353/192491288-76a339b8-6b2b-4469-93d5-67fbcf87612f.png)
+
+
+```{r}           
 #PLot-4 Average_duration for each month for members and casual riders.
 cleaned_data%>% 
   group_by(membership_type, start_month) %>% 
@@ -288,7 +282,11 @@ cleaned_data%>%
   labs(title = "Average duration vs Month", subtitle = "Ride Time",
        caption = "Data collected from Divvy")+ 
   geom_col(position = "dodge")
+```
+**Plot-4** ![chart_04](https://user-images.githubusercontent.com/108362353/192491289-204f3502-b509-425b-bdbc-77eda67c88d0.png)
 
+
+```{r}
 #Plot-5 Number of rides monthly(time series)
 cleaned_data %>% 
   ggplot(mapping = aes(x = start_date, color = membership_type))+
@@ -296,7 +294,9 @@ cleaned_data %>%
   labs(title = "Number of rides for 12 months", subtitle = "Casual vs Member", 
        caption = "Data collected from Divvy")
 ```
-<br>
+**Plot-05** ![chart_05](https://user-images.githubusercontent.com/108362353/192491321-29bce2af-6908-4f28-a844-2ce7bd4b2fc4.png)
+
+
 ```{r}
 #Plot-6 The overall rider count based on membership type
 cleaned_data %>%
@@ -306,12 +306,13 @@ cleaned_data %>%
   labs(title = "Number of members and casuals", subtitle = "Casual vs Member", 
        caption = "Data collected from Divvy")+
   geom_col()
-
 ```
+**Plot-06** ![chart_06](https://user-images.githubusercontent.com/108362353/192491343-f0e2a3e0-a79b-4527-831d-c88cfb31e1be.png)
 
-##### The **Share** Phase
 
-##### *Conclusions/Summary of Insights* 
+### The **Share** Phase
+
+#### *Conclusions/Summary of Insights* 
 
 There is huge difference between members and casual in-terms of how bikes are rented, when bikes are rented and which days the bike are rented.
 
@@ -329,7 +330,7 @@ It shows that the number of rides is high for members due to consistent and shor
 
 * Further study to this data can give more insights based on which stations are used by members and casual rider regularly. Hourly based analysis can give more accurate insight for members average ride time.
 
-##### *Recommendations*
+#### *Recommendations*
 
 * Company can come up with a referral program for its members, where for every new annual membership from their referral gets few minutes of free usage of the rides.
 
@@ -340,7 +341,7 @@ It shows that the number of rides is high for members due to consistent and shor
 * Campaign for weekends should be done to promote longer rides and to increase the usage for members, such as weekends promotions and benefits for members.
 
 
-##### The **Act** Phase
+### The **Act** Phase
 
 Taking into consideration each team members' insights and recommendations, Lily Moreno, the director of marketing, will come up with marketing strategies and campaigns which will be presented to the Cyclistic Executive Team, who, in turn, will decide whether to act on it or not.
 
